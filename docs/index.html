@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preparador de archivos para IA</title>
+<meta name="description" content="Convierte TXT, HTML, PDF, Word, Excel, PowerPoint y páginas web a Markdown, listo para usar como contexto en herramientas de IA.">
+<link rel="icon" href="assets/logo.jpg">
+<style>
+  :root {
+    --blue: #04225e;
+    --blue-light: #3d6d99;
+    --bg: #ffffff;
+    --bg-alt: #f4f7fb;
+    --text: #1b2430;
+    --text-muted: #566073;
+    --border: #dfe6ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1220;
+      --bg-alt: #121c30;
+      --text: #e9edf5;
+      --text-muted: #a7b1c2;
+      --border: #24314a;
+      --blue-light: #6f9cc9;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+  }
+  a { color: var(--blue-light); }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  header.top {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; }
+  header.top img { height: 34px; display: block; }
+  header.top nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    margin-left: 22px;
+  }
+  header.top nav a:hover { color: var(--blue-light); }
+
+  .hero {
+    padding: 72px 0 56px;
+    text-align: center;
+  }
+  .hero .badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--blue);
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 14px;
+    margin-bottom: 20px;
+  }
+  @media (prefers-color-scheme: dark) { .hero .badge { color: var(--blue-light); } }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+  }
+  .hero p.lead {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 620px;
+    margin: 0 auto 36px;
+  }
+
+  .downloads {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 26px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { opacity: 0.92; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .hero .note { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+  section { padding: 48px 0; }
+  section.alt { background: var(--bg-alt); }
+  h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 0 0 36px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    background: var(--bg);
+  }
+  section.alt .card { background: var(--bg); }
+  .card .icon { font-size: 1.6rem; margin-bottom: 10px; display: block; }
+  .card h3 { margin: 0 0 8px; font-size: 1.02rem; }
+  .card p { margin: 0; color: var(--text-muted); font-size: 0.92rem; }
+
+  .steps {
+    counter-reset: step;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .step { text-align: center; }
+  .step .num {
+    counter-increment: step;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin: 0 auto 12px;
+  }
+  .step .num::before { content: counter(step); }
+  .step h3 { margin: 0 0 6px; font-size: 1rem; }
+  .step p { margin: 0; color: var(--text-muted); font-size: 0.9rem; }
+
+  .formats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .formats span {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  footer {
+    padding: 32px 0 48px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+  footer a { color: var(--text-muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <img src="assets/logo.jpg" alt="VirtualTelco">
+    <nav>
+      <a href="https://github.com/atorresa/markdown">Código fuente</a>
+      <a href="https://github.com/atorresa/markdown/releases">Releases</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="badge">v1.0.0 · Windows</span>
+    <h1>Preparador de archivos para IA</h1>
+    <p class="lead">
+      Convierte tus documentos y páginas web a Markdown limpio, listo para pegar
+      como contexto en ChatGPT, Claude o cualquier herramienta de IA.
+    </p>
+    <div class="downloads">
+      <a class="btn btn-primary" href="https://github.com/atorresa/markdown/releases/latest/download/Preparador_de_archivos_para_IA_Installer.exe">
+        ⬇ Descargar instalador
+      </a>
+      <a class="btn btn-secondary" href="https://github.com/atorresa/markdown/releases/latest/download/preparador_de_archivos_para_ia.exe">
+        Versión portable (.exe)
+      </a>
+    </div>
+    <p class="note">Windows 10/11 · 64 bits · No requiere Python instalado</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>Formatos admitidos</h2>
+    <div class="formats">
+      <span>.txt</span>
+      <span>.html / .htm</span>
+      <span>.pdf</span>
+      <span>.docx (Word)</span>
+      <span>.xlsx (Excel)</span>
+      <span>.pptx (PowerPoint)</span>
+      <span>Páginas web (URL)</span>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Qué incluye</h2>
+    <div class="grid">
+      <div class="card">
+        <span class="icon">🌐</span>
+        <h3>Convierte páginas web</h3>
+        <p>Pega una URL y se descarga y convierte a Markdown, quitando menús, cabeceras y anuncios.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🖱️</span>
+        <h3>Arrastrar y soltar</h3>
+        <p>Suelta archivos directamente sobre la ventana, o pega rutas y URLs con Ctrl+V.</p>
+      </div>
+      <div class="card">
+        <span class="icon">📦</span>
+        <h3>Conversión por lotes</h3>
+        <p>Selecciona varios archivos a la vez y conviértelos todos en un solo paso.</p>
+      </div>
+      <div class="card">
+        <span class="icon">⏳</span>
+        <h3>No se congela</h3>
+        <p>La conversión corre en segundo plano con una barra de progreso, la ventana sigue respondiendo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Cómo se usa</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num"></div>
+        <h3>Instala o ejecuta</h3>
+        <p>Descarga el instalador o usa la versión portable, sin dependencias extra.</p>
+      </div>
+      <div class="step">
+        <div class="num"></div>
+        <h3>Elige el origen</h3>
+        <p>Selecciona archivos, arrástralos, o escribe/pega una URL.</p>
+      </div>
+      <div class="step">
+        <div class="num"></div>
+        <h3>Convierte</h3>
+        <p>Pulsa "Convertir" y obtén tu(s) archivo(s) .md listos para usar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Proyecto de código abierto · <a href="https://github.com/atorresa/markdown">github.com/atorresa/markdown</a>
+  </div>
+</footer>
+
+</body>
+</html>
