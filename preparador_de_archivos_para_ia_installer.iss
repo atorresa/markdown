@@ -1,7 +1,7 @@
 [Setup]
 AppName=Preparador de archivos para IA
 AppVersion=1.0.0
-DefaultDirName={pf}\Preparador de archivos para IA
+DefaultDirName={autopf}\Preparador de archivos para IA
 DefaultGroupName=voipers
 DisableProgramGroupPage=no
 AllowNoIcons=yes
@@ -10,14 +10,13 @@ OutputDir=Output
 Compression=lzma2
 SolidCompression=yes
 SetupIconFile=icon.ico
-ArchitecturesAllowed=x64
-DefaultGroupName=voipers
+ArchitecturesAllowed=x64compatible
 
 [Languages]
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "Crear acceso directo en el Escritorio"; GroupDescription: "Tareas adicionales:"; Flags: checked
+Name: "desktopicon"; Description: "Crear acceso directo en el Escritorio"; GroupDescription: "Tareas adicionales:"
 
 [Files]
 Source: "dist\preparador_de_archivos_para_ia.exe"; DestDir: "{app}"; Flags: ignoreversion
