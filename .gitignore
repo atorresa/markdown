@@ -1,0 +1,17 @@
+# Entorno virtual
+.venv/
+venv/
+
+# Bytecode de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Artefactos de compilación (PyInstaller / Inno Setup)
+build/
+dist/
+Output/
+
+# Archivos temporales del sistema/editor
+*.log
+.DS_Store

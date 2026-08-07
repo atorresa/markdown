@@ -26,3 +26,24 @@ python app_gui.py
 ```bash
 python app.py archivo.txt
 ```
+
+## Instalador para Windows
+
+1. Genera el ejecutable:
+
+```powershell
+python build_exe.py
+```
+
+2. Compila el instalador (requiere Inno Setup):
+
+```powershell
+build_installer.bat
+```
+
+3. El instalador resultante queda en `Output\Preparador_de_archivos_para_IA_Installer.exe`.
+
+4. Al instalar en Windows, el instalador crea:
+- un folder en el menú de Inicio llamado `voipers`
+- un acceso directo en el Escritorio llamado `Preparador de archivos para IA`
+

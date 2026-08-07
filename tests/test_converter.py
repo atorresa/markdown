@@ -1,13 +1,15 @@
+"""Tests del conversor: texto plano, HTML, Word, PDF, Excel, PowerPoint, URLs y conversión por lotes."""
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 from docx import Document as DocxDocument
 from openpyxl import Workbook as OpenPyXLWorkbook
 from pptx import Presentation as PptxPresentation
 from reportlab.pdfgen import canvas
 
-from app import convert_file, convert_files, convert_text_to_markdown
+from app import convert_file, convert_files, convert_text_to_markdown, is_url
 
 
 class ConverterTests(unittest.TestCase):
@@ -71,6 +73,34 @@ class ConverterTests(unittest.TestCase):
             convert_file(str(input_path), str(output_path))
 
             self.assertIn("Contenido de PowerPoint", output_path.read_text(encoding="utf-8"))
+
+    def test_is_url_distinguishes_urls_from_local_paths(self):
+        self.assertTrue(is_url("https://example.com/pagina"))
+        self.assertFalse(is_url(r"C:\Users\alguien\archivo.txt"))
+        self.assertFalse(is_url("archivo.txt"))
+
+    @patch("app.requests.get")
+    def test_url_is_converted_to_markdown(self, mock_get):
+        html = (
+            "<html><head><title>Pagina de prueba</title>"
+            "<script>alert(1)</script></head>"
+            "<body><nav>menu</nav><h1>Titulo</h1>"
+            "<p>Contenido de la <strong>pagina web</strong>.</p></body></html>"
+        )
+        mock_response = Mock(text=html, encoding="utf-8")
+        mock_response.raise_for_status = Mock()
+        mock_get.return_value = mock_response
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_path = Path(tmpdir) / "salida.md"
+            result = convert_file("https://example.com/pagina", str(output_path))
+            content = Path(result).read_text(encoding="utf-8")
+
+            self.assertIn("# Titulo", content)
+            self.assertIn("**pagina web**", content)
+            # El script y el menú de navegación no deben aparecer en el resultado.
+            self.assertNotIn("alert(1)", content)
+            self.assertNotIn("menu", content)
 
     def test_batch_conversion_creates_multiple_markdown_files(self):
         with tempfile.TemporaryDirectory() as tmpdir:

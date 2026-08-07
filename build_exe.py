@@ -13,6 +13,7 @@ def get_python_executable():
 
 
 def install_pillow():
+    """Instala Pillow, necesaria para generar el icono por defecto y procesar el logo."""
     subprocess.check_call([get_python_executable(), "-m", "pip", "install", "pillow"])
 
 
@@ -57,6 +58,7 @@ def ensure_icon():
 
 
 def ensure_dependency(module_name: str, package_name: str | None = None):
+    """Comprueba que un módulo esté instalado y, si falta, lo instala con pip."""
     try:
         __import__(module_name)
     except ImportError:
@@ -70,7 +72,7 @@ def build_exe():
 
     ensure_icon()
 
-    hidden_imports = ["docx", "pptx", "openpyxl", "pypdf"]
+    hidden_imports = ["docx", "pptx", "openpyxl", "pypdf", "tkinterdnd2", "requests", "markdownify", "bs4"]
     command = [
         get_python_executable(),
         "-m",
@@ -81,6 +83,8 @@ def build_exe():
         str(ICON_FILE),
         "--name",
         "preparador_de_archivos_para_ia",
+        "--add-data",
+        f"{ROOT / 'assets' / 'logo.jpg'};assets",
         "app_gui.py",
     ]
     for hidden in hidden_imports:
