@@ -25,7 +25,7 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
     def __init__(self):
         """Crea la ventana principal, sus variables de estado y construye la interfaz."""
         super().__init__()
-        self.title("Preparador de archivos para IA")
+        self.title("Preparador de archivos para IA en general o 3CX IA")
         self.geometry("720x480")
         try:
             self.iconbitmap(default="icon.ico")
@@ -61,6 +61,7 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
             bordercolor="#dfe6ee",
             lightcolor=self.BRAND_BLUE,
             darkcolor=self.BRAND_BLUE,
+            font=("Arial", 16,),
         )
 
     def _build_logo(self, parent):
@@ -75,7 +76,7 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
             self._logo_image = ImageTk.PhotoImage(image)
             ttk.Label(parent, image=self._logo_image).pack(anchor="w", pady=(0, 12))
         except Exception:
-            ttk.Label(parent, text="Preparador de archivos para IA", font=("Segoe UI", 16, "bold")).pack(
+            ttk.Label(parent, text="Preparador de archivos para IA", font=("Arial", 16, "bold")).pack(
                 anchor="w", pady=(0, 12)
             )
 
@@ -89,7 +90,8 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
 
         subtitle = ttk.Label(
             main,
-            text="Convierte archivos TXT, HTML, PDF, Word, Excel, PowerPoint o una página web (URL) a Markdown para IA.",
+            text="Convierte archivos TXT, HTML, PDF, Word, Excel, PowerPoint o una página web (URL) a Markdown para 3CX o IA.",
+            font=("Arial", 16),
             wraplength=640,
         )
         subtitle.pack(anchor="w", pady=(0, 12))
@@ -101,7 +103,7 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
         input_entry.pack(side="left", fill="x", expand=True)
         ttk.Button(input_frame, text="Explorar", command=self.select_input_file).pack(side="left", padx=(8, 0))
 
-        ttk.Label(main, text="Carpeta de salida:").pack(anchor="w")
+        ttk.Label(main, text="Carpeta de salida del archivo markdown:").pack(anchor="w")
         output_frame = ttk.Frame(main)
         output_frame.pack(fill="x", pady=(4, 8))
         output_entry = ttk.Entry(output_frame, textvariable=self.output_path, width=90)
