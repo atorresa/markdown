@@ -15,6 +15,8 @@ pip install -r requirements.txt
 
 ## Uso
 
+se puede usar para alimentar las IA de 3CX Y Yeastar
+
 ### Interfaz gráfica
 
 ```bash
