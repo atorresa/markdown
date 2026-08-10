@@ -142,48 +142,53 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
             )
 
     def _build_menu(self):
-        """Crea la barra de menú superior para navegar entre Inicio y Términos y condiciones."""
+        """Crea la barra de menú superior para navegar entre Inicio, Términos y Licencia."""
         menubar = tk.Menu(self)
-        menubar.add_command(label="Inicio", command=self.show_home)
-        menubar.add_command(label="Términos y condiciones", command=self.show_terms)
+        menubar.add_command(label="Inicio", command=lambda: self._show_page("home"))
+        menubar.add_command(label="Términos y condiciones", command=lambda: self._show_page("terms"))
+        menubar.add_command(label="Licencia", command=lambda: self._show_page("license"))
         self.config(menu=menubar)
 
     def _build_ui(self):
-        """Construye las dos páginas de la aplicación (Inicio y Términos y condiciones)."""
+        """Construye las páginas de la aplicación (Inicio, Términos y condiciones, Licencia)."""
         self.container = ttk.Frame(self)
         self.container.pack(fill="both", expand=True)
 
-        self._build_home_page()
-        self._build_terms_page()
-        self.show_home()
+        self.pages = {
+            "home": self._build_home_page(),
+            "terms": self._build_text_page("Términos y condiciones", TERMS_AND_CONDITIONS_TEXT),
+            "license": self._build_text_page("Licencia", self._load_license_text()),
+        }
+        self._show_page("home")
 
-    def show_home(self):
-        """Muestra la página de Inicio (conversión de archivos) y oculta la de Términos."""
-        self.terms_frame.pack_forget()
-        self.home_frame.pack(fill="both", expand=True)
+    def _show_page(self, name: str):
+        """Muestra la página indicada ('home', 'terms' o 'license') y oculta las demás."""
+        for page_name, frame in self.pages.items():
+            if page_name == name:
+                frame.pack(fill="both", expand=True)
+            else:
+                frame.pack_forget()
 
-    def show_terms(self):
-        """Muestra la página de Términos y condiciones y oculta la de Inicio."""
-        self.home_frame.pack_forget()
-        self.terms_frame.pack(fill="both", expand=True)
+    def _load_license_text(self) -> str:
+        """Lee el archivo LICENSE del repositorio para mostrarlo en la página de Licencia."""
+        try:
+            return resource_path("LICENSE").read_text(encoding="utf-8")
+        except Exception:
+            return "No se encontró el archivo LICENSE."
 
-    def _build_terms_page(self):
-        """Construye la página de Términos y condiciones: un texto largo, legible y de solo lectura."""
-        self.terms_frame = ttk.Frame(self.container, padding=20, style="Card.TFrame")
+    def _build_text_page(self, title: str, text: str) -> ttk.Frame:
+        """Construye una página genérica con un título y un texto largo, legible y de solo lectura."""
+        frame = ttk.Frame(self.container, padding=20, style="Card.TFrame")
 
-        ttk.Label(
-            self.terms_frame,
-            text="Términos y condiciones",
-            font=("Arial", 16, "bold"),
-        ).pack(anchor="w", pady=(0, 10))
+        ttk.Label(frame, text=title, font=("Arial", 16, "bold")).pack(anchor="w", pady=(0, 10))
 
-        text_frame = ttk.Frame(self.terms_frame)
+        text_frame = ttk.Frame(frame)
         text_frame.pack(fill="both", expand=True)
 
         scrollbar = ttk.Scrollbar(text_frame, orient="vertical")
         scrollbar.pack(side="right", fill="y")
 
-        terms_text = tk.Text(
+        text_widget = tk.Text(
             text_frame,
             wrap="word",
             font=("Arial", 10),
@@ -193,14 +198,20 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
             pady=4,
             yscrollcommand=scrollbar.set,
         )
-        terms_text.insert("1.0", TERMS_AND_CONDITIONS_TEXT)
-        terms_text.configure(state="disabled")
-        terms_text.pack(side="left", fill="both", expand=True)
-        scrollbar.configure(command=terms_text.yview)
+        text_widget.insert("1.0", text)
+        # insert() deja el cursor al final del texto insertado; sin esto, el widget arranca
+        # con scroll casi al final en vez de mostrar el principio.
+        text_widget.mark_set("insert", "1.0")
+        text_widget.see("1.0")
+        text_widget.configure(state="disabled")
+        text_widget.pack(side="left", fill="both", expand=True)
+        scrollbar.configure(command=text_widget.yview)
 
-    def _build_home_page(self):
+        return frame
+
+    def _build_home_page(self) -> ttk.Frame:
         """Construye la página de Inicio: los campos de entrada, salida y botones de conversión."""
-        main = self.home_frame = ttk.Frame(self.container, padding=20)
+        main = ttk.Frame(self.container, padding=20)
         main.configure(style="Card.TFrame")
 
         self._build_logo(main)
@@ -258,6 +269,8 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
         for widget in (self, self.drop_target):
             widget.drop_target_register(DND_FILES)
             widget.dnd_bind("<<Drop>>", self.handle_file_drop)
+
+        return main
 
     def select_input_file(self):
         """Permite seleccionar uno o varios archivos desde el explorador."""

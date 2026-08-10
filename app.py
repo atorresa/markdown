@@ -24,7 +24,7 @@ from striprtf.striprtf import rtf_to_text
 
 # Versión de la aplicación, mostrada en la barra de título de la GUI.
 # Debe mantenerse sincronizada con AppVersion en preparador_de_archivos_para_ia_installer.iss.
-__version__ = "1.1.0"
+__version__ = "2.0.0"
 
 # Extensiones de archivo local que la aplicación sabe leer (además de las páginas web por URL).
 SUPPORTED_EXTENSIONS = {

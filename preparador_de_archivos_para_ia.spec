@@ -5,7 +5,7 @@ a = Analysis(
     ['app_gui.py'],
     pathex=[],
     binaries=[],
-    datas=[('C:\\Users\\Usuario\\conversor markdown\\assets\\logo.jpg', 'assets'), ('C:\\Users\\Usuario\\conversor markdown\\.venv\\Lib\\site-packages\\rapidocr_onnxruntime', 'rapidocr_onnxruntime')],
+    datas=[('C:\\Users\\Usuario\\conversor markdown\\assets\\logo.jpg', 'assets'), ('C:\\Users\\Usuario\\conversor markdown\\LICENSE', '.'), ('C:\\Users\\Usuario\\conversor markdown\\.venv\\Lib\\site-packages\\rapidocr_onnxruntime', 'rapidocr_onnxruntime')],
     hiddenimports=['docx', 'pptx', 'openpyxl', 'pymupdf', 'rapidocr_onnxruntime', 'striprtf', 'tkinterdnd2', 'requests', 'markdownify', 'bs4', 'pyclipper', 'shapely', 'shapely.geometry', 'six'],
     hookspath=[],
     hooksconfig={},
