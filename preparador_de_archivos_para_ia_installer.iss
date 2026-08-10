@@ -1,6 +1,6 @@
 [Setup]
 AppName=Preparador de archivos para IA
-AppVersion=1.0.0
+AppVersion=1.1.0
 DefaultDirName={autopf}\Preparador de archivos para IA
 DefaultGroupName=voipers
 DisableProgramGroupPage=no

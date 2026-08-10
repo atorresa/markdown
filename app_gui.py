@@ -7,13 +7,73 @@ from pathlib import Path
 from PIL import Image, ImageTk
 from tkinterdnd2 import DND_FILES, TkinterDnD
 
-from app import convert_file, convert_files, is_url
+from app import __version__, convert_file, convert_files, is_url
 
 
 def resource_path(relative_path: str) -> Path:
     """Resuelve una ruta de recurso tanto en desarrollo como empaquetada con PyInstaller."""
     base_path = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
     return base_path / relative_path
+
+
+TERMS_AND_CONDITIONS_TEXT = """TÉRMINOS Y CONDICIONES DE USO Y POLÍTICA DE PRIVACIDAD.
+
+Última actualización: 9 de agosto de 2026
+
+Al descargar, instalar, acceder o utilizar esta aplicación (en adelante, la "Aplicación"), usted (en adelante, el "Usuario") acepta de manera plena y sin reservas los presentes Términos y Condiciones de Uso. Si no está de acuerdo con las condiciones aquí establecidas, deberá abstenerse de instalar o utilizar la Aplicación.
+
+1. TITULARIDAD Y PROPIEDAD INTELECTUAL
+La Aplicación, su código fuente, arquitectura, diseño, interfaz de usuario, marcas, logotipos y cualquier documentación técnica son propiedad exclusiva de VIRTUALTELCO S.A.S. BIC (sociedad comercial identificada bajo las leyes de la República de Colombia).
+
+Todos los derechos de propiedad intelectual e industrial están reservados a favor de VIRTUALTELCO S.A.S. BIC. Nada en estos términos se interpretará como transferencia o cesión de la propiedad de la Aplicación al Usuario.
+
+2. CONCESIÓN DE LICENCIA DE USO
+VIRTUALTELCO S.A.S. BIC concede al Usuario una licencia de uso:
+
+Carácter: Limitada, no exclusiva, personal, intransferible, gratuita, revocable y no sublicenciable.
+
+Finalidad: Exclusivamente para uso personal y no comercial.
+
+Restricciones: El Usuario no podrá vender, alquilar, sublicenciar, descompilar, realizar ingeniería inversa, modificar o crear obras derivadas basadas en la Aplicación sin autorización previa y por escrito de VIRTUALTELCO S.A.S. BIC.
+
+3. AUSENCIA DE COMPRAS EN LA APLICACIÓN Y GRATUIDAD TOTAL
+La Aplicación es completamente gratuita. NO contiene ni ofrece compras dentro de la aplicación (In-App Purchases), suscripciones pagadas, microtransacciones ni cargos ocultos de ningún tipo. El acceso a todas las funcionalidades disponibles en la Aplicación se otorga sin costo alguno para el Usuario.
+
+4. AUSENCIA DE PUBLICIDAD DE TERCEROS
+La Aplicación NO contiene publicidad de terceros, banners publicitarios, anuncios de video, ventanas emergentes ni ningún tipo de red publicitaria (Ad Networks). La experiencia de uso está 100% libre de anuncios comerciales.
+
+5. PRINCIPIO DE PRIVACIDAD Y AUSENCIA DE RECOLECCIÓN DE DATOS
+En cumplimiento de la Ley Estatutaria 1581 de 2012 de Colombia, el Reglamento General de Protección de Datos (RGPD/GDPR) de la Unión Europea, la CCPA/CPRA de California (EE. UU.) y la COPPA (protección de menores):
+
+Declaramos de forma categórica que la Aplicación opera bajo el principio de Privacidad desde el Diseño y NO recolecta, almacena, procesa, transmite, vende ni comparte ningún tipo de dato personal (como nombres, correos electrónicos, identificadores de dispositivo, ubicaciones GPS o listas de contactos).
+
+Al no incluir publicidad ni compras dentro de la app, tampoco se emplean cookies de rastreo, SDKs de analítica comercial ni herramientas de perfilamiento de usuarios.
+
+Cualquier procesamiento técnico, cálculo o almacenamiento de archivos se realiza exclusivamente de manera local en el dispositivo del Usuario.
+
+6. RESPONSABILIDAD ÚNICA DEL USUARIO Y EXENCIÓN DE RESPONSABILIDAD
+Uso bajo propio riesgo: El uso de la Aplicación y de los datos, cálculos o resultados generados a través de ella se realiza bajo el exclusivo criterio, cuenta y riesgo del Usuario.
+
+Responsabilidad por los resultados: VIRTUALTELCO S.A.S. BIC no garantiza la idoneidad, precisión o exhaustividad de los resultados obtenidos con la Aplicación. El Usuario es el único y exclusivo responsable de las decisiones o acciones que adopte con base en el uso de la Aplicación.
+
+Garantía "Tal Cual" (As Is): La Aplicación se proporciona "TAL CUAL" y "SEGÚN DISPONIBILIDAD", sin garantías de funcionamiento ininterrumpido ni libre de errores.
+
+Limitación de responsabilidad: En la máxima medida permitida por la ley aplicable, VIRTUALTELCO S.A.S. BIC no será responsable por ningún daño directo, indirecto, incidental, especial o consecuencial derivado del uso o la imposibilidad de uso de la Aplicación.
+
+7. MODIFICACIONES Y TERMINACIÓN
+VIRTUALTELCO S.A.S. BIC se reserva el derecho de modificar, actualizar o discontinuar la Aplicación o los presentes Términos en cualquier momento. La versión actualizada estará disponible dentro de la Aplicación o en la ficha de la tienda correspondiente.
+
+8. LEY APLICABLE Y JURISDICCIÓN
+Estos Términos y Condiciones se rigen e interpretan de conformidad con las leyes de la República de Colombia. Cualquier disputa o controversia será sometida a la jurisdicción de los jueces y tribunales competentes de Colombia.
+
+9. CONTACTO
+Para cualquier inquietud relacionada con estos Términos o el funcionamiento de la Aplicación, puede comunicarse con:
+
+Razón Social: VIRTUALTELCO S.A.S. BIC
+
+www.virtualtelco.com.co
+
+País: Colombia"""
 
 
 class MarkdownConverterGUI(TkinterDnD.Tk):
@@ -25,7 +85,7 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
     def __init__(self):
         """Crea la ventana principal, sus variables de estado y construye la interfaz."""
         super().__init__()
-        self.title("Preparador de archivos para IA en general o 3CX IA")
+        self.title(f"Preparador de archivos para IA en general o 3CX IA — v{__version__}")
         self.geometry("720x480")
         try:
             self.iconbitmap(default="icon.ico")
@@ -40,6 +100,7 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
         self.status_text = tk.StringVar(value="Selecciona uno o varios archivos para comenzar")
         self.input_paths: list[str] = []
 
+        self._build_menu()
         self._build_ui()
 
     def _configure_styles(self):
@@ -80,17 +141,76 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
                 anchor="w", pady=(0, 12)
             )
 
+    def _build_menu(self):
+        """Crea la barra de menú superior para navegar entre Inicio y Términos y condiciones."""
+        menubar = tk.Menu(self)
+        menubar.add_command(label="Inicio", command=self.show_home)
+        menubar.add_command(label="Términos y condiciones", command=self.show_terms)
+        self.config(menu=menubar)
+
     def _build_ui(self):
-        """Construye la interfaz con los campos de entrada, salida y botones."""
-        main = ttk.Frame(self, padding=20)
-        main.pack(fill="both", expand=True)
+        """Construye las dos páginas de la aplicación (Inicio y Términos y condiciones)."""
+        self.container = ttk.Frame(self)
+        self.container.pack(fill="both", expand=True)
+
+        self._build_home_page()
+        self._build_terms_page()
+        self.show_home()
+
+    def show_home(self):
+        """Muestra la página de Inicio (conversión de archivos) y oculta la de Términos."""
+        self.terms_frame.pack_forget()
+        self.home_frame.pack(fill="both", expand=True)
+
+    def show_terms(self):
+        """Muestra la página de Términos y condiciones y oculta la de Inicio."""
+        self.home_frame.pack_forget()
+        self.terms_frame.pack(fill="both", expand=True)
+
+    def _build_terms_page(self):
+        """Construye la página de Términos y condiciones: un texto largo, legible y de solo lectura."""
+        self.terms_frame = ttk.Frame(self.container, padding=20, style="Card.TFrame")
+
+        ttk.Label(
+            self.terms_frame,
+            text="Términos y condiciones",
+            font=("Arial", 16, "bold"),
+        ).pack(anchor="w", pady=(0, 10))
+
+        text_frame = ttk.Frame(self.terms_frame)
+        text_frame.pack(fill="both", expand=True)
+
+        scrollbar = ttk.Scrollbar(text_frame, orient="vertical")
+        scrollbar.pack(side="right", fill="y")
+
+        terms_text = tk.Text(
+            text_frame,
+            wrap="word",
+            font=("Arial", 10),
+            background=self.BRAND_WHITE,
+            relief="flat",
+            padx=4,
+            pady=4,
+            yscrollcommand=scrollbar.set,
+        )
+        terms_text.insert("1.0", TERMS_AND_CONDITIONS_TEXT)
+        terms_text.configure(state="disabled")
+        terms_text.pack(side="left", fill="both", expand=True)
+        scrollbar.configure(command=terms_text.yview)
+
+    def _build_home_page(self):
+        """Construye la página de Inicio: los campos de entrada, salida y botones de conversión."""
+        main = self.home_frame = ttk.Frame(self.container, padding=20)
         main.configure(style="Card.TFrame")
 
         self._build_logo(main)
 
         subtitle = ttk.Label(
             main,
-            text="Convierte archivos TXT, HTML, PDF, Word, Excel, PowerPoint o una página web (URL) a Markdown para 3CX o IA.",
+            text=(
+                "Convierte archivos TXT, HTML, PDF, Word, Excel, PowerPoint, OpenDocument "
+                "(LibreOffice/OpenOffice), RTF o una página web (URL) a Markdown para 3CX o IA."
+            ),
             font=("Arial", 16),
             wraplength=640,
         )
@@ -144,7 +264,10 @@ class MarkdownConverterGUI(TkinterDnD.Tk):
         file_paths = filedialog.askopenfilenames(
             title="Selecciona uno o varios archivos",
             filetypes=[
-                ("Archivos soportados", "*.txt;*.html;*.htm;*.docx;*.pdf;*.xlsx;*.pptx"),
+                (
+                    "Archivos soportados",
+                    "*.txt;*.html;*.htm;*.docx;*.pdf;*.xlsx;*.pptx;*.odt;*.ods;*.odp;*.rtf",
+                ),
                 ("Todos los archivos", "*.*"),
             ],
         )
