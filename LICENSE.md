@@ -1,3 +1,4 @@
+```
 # Derechos de Autor (C) 2026 virtualtelco SAS BIC
 
 Este programa es software libre: usted puede redistribuirlo y/o modificarlo
@@ -9,7 +10,7 @@ Este programa se distribuye con la esperanza de que sea útil, pero SIN
 NINGUNA GARANTÍA; ni siquiera la garantía implícita de COMERCIABILIDAD o
 ADECUACIÓN PARA UN PROPÓSITO PARTICULAR. Consulte la Licencia Pública
 General GNU para obtener más detalles.
-
+```
 
 
 #                      GNU GENERAL PUBLIC LICENSE
