@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preparador de archivos para IA</title>
-<meta name="description" content="Convierte TXT, HTML, PDF, Word, Excel, PowerPoint y páginas web a Markdown, listo para usar como contexto en herramientas de IA.">
+<meta name="description" content="Convierte TXT, HTML, PDF (con OCR), Word, Excel, PowerPoint, OpenDocument, RTF y páginas web a Markdown, listo para usar como contexto en herramientas de IA.">
 <link rel="icon" href="assets/logo.jpg">
 <style>
   :root {
@@ -193,7 +193,7 @@
 
 <div class="hero">
   <div class="wrap">
-    <span class="badge">v1.0.0 · Windows</span>
+    <span class="badge">v1.1.0 · Windows</span>
     <h1>Preparador de archivos para IA</h1>
     <p class="lead">
       Convierte tus documentos y páginas web a Markdown limpio, listo para pegar
@@ -217,10 +217,14 @@
     <div class="formats">
       <span>.txt</span>
       <span>.html / .htm</span>
-      <span>.pdf</span>
+      <span>.pdf (con OCR)</span>
       <span>.docx (Word)</span>
       <span>.xlsx (Excel)</span>
       <span>.pptx (PowerPoint)</span>
+      <span>.odt (OpenDocument Text)</span>
+      <span>.ods (OpenDocument Calc)</span>
+      <span>.odp (OpenDocument Impress)</span>
+      <span>.rtf</span>
       <span>Páginas web (URL)</span>
     </div>
   </div>
@@ -230,6 +234,16 @@
   <div class="wrap">
     <h2>Qué incluye</h2>
     <div class="grid">
+      <div class="card">
+        <span class="icon">🔎</span>
+        <h3>OCR en PDF</h3>
+        <p>Cada página de un PDF se reconoce con OCR, así que también funciona con PDFs escaneados o basados en imágenes.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🖼️</span>
+        <h3>Extrae imágenes incrustadas</h3>
+        <p>Las imágenes de Word, PDF, PowerPoint y OpenDocument se guardan como PNG junto al .md y quedan enlazadas en su lugar original.</p>
+      </div>
       <div class="card">
         <span class="icon">🌐</span>
         <h3>Convierte páginas web</h3>
