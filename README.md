@@ -1,6 +1,6 @@
 # Preparador de archivos para IA
 
-Aplicación en Python para convertir archivos de texto, HTML, PDF y documentos de Office a Markdown para ser usados con IA.
+Aplicación en Python para convertir archivos de texto, HTML, PDF, documentos de Office y open office a Markdown para ser usados con las IA de 3CX, yeastar o otra IA.
 
 ## Requisitos
 
