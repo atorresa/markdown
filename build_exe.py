@@ -169,6 +169,8 @@ def build_exe():
         "preparador_de_archivos_para_ia",
         "--add-data",
         f"{ROOT / 'assets' / 'logo.jpg'};assets",
+        "--add-data",
+        f"{ROOT / 'LICENSE'};.",
         "--version-file",
         str(version_info_file),
         # rapidocr_onnxruntime carga sus submódulos (detector/reconocedor/clasificador) en
